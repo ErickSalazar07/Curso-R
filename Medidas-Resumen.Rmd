@@ -1,0 +1,43 @@
+---
+title: "Medidas"
+author: "Erick Salazar Suarez"
+date: "2025-02-15"
+output: pdf_document
+---
+
+## Agregando paquetes necesarios.
+```{r}
+install.packages("dplyr")
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+db <- read.csv("sample_data.csv")
+head(db)
+```
+
+### Calculamos media y mediana
+```{r}
+db %>%
+  group_by(COLE_JORNADA) %>%
+  summarize(n_est=n(), avg_punt=mean(PUNT_GLOBAL), med_punt=median(PUNT_GLOBAL))
+```
+
+### Desviacion Estandar (SD)
+
+```{r}
+db %>%
+  group_by(COLE_JORNADA) %>%
+  summarize(n_est=n(), avg_punt=mean(PUNT_GLOBAL), sd_punt=sd(PUNT_GLOBAL), cv_punt=sd_punt/avg_punt)
+```
+
+### Medidas de Posicion
+```{r}
+# Misma funcion para (percentil, cuartil, decil) cambian el argumento que se le pasa
+quantile(db$PUNT_GLOBAL,0.1)
+quantile(db$PUNT_GLOBAL,c(0.25,0.5,0.75)) # se le pasa un vector que encuentra los 3 cuartiles
+quantile(db$PUNT_GLOBAL,seq(0.1,0.9,0.1)) # se le especifica una especie de for(float a = 0.1; a <= 0.9; a+=0.1)
+```
+
+
