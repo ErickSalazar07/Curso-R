@@ -1,0 +1,59 @@
+```{r}
+dado <- seq(1,6,1)
+set.seed(123)
+lanzamientos <- sample(dado,500,replace=TRUE)
+lanzamientos
+```
+
+```{r}
+media_teorica <- n_exp*p_exp
+varianza_teorica <- n_exp*p_exp*(1-p_exp)
+desviacion_teorica <- sqrt(varianza_teorica)
+media_empirica <- mean(distribucion_binomial&resultado)
+varianza_empirica <- var(distribucion_binomial&resultado)
+desviacion_empirica <- sd(distribucion_binomial&resultado)
+```
+
+```{r}
+n_exp <- 10
+p_exp <- 0.5
+distr_bin_sim <- rbinom(1e6,n_exp,p_exp)
+media_empirica_sim <- mean(distr_bin_sim)
+varianza_empirica_sim <- var(distr_bin_sim)
+desviacion_empirica_sim <- sd(distr_bin_sim)
+data.frame(Medida = c("Valor Esperado","Varianza","Desviacion"),
+           media_empirica_sim,
+           varianza_empirica_sim,
+           desviacion_empirica_sim)
+```
+
+
+```{r}
+# Ejercicio Probabilidad Binomial
+
+n <- 4
+p <- 1/3
+valor_esperado <- n*p
+varianza <- n*p*(1-p)
+desviacion_estandar <- sqrt(varianza)
+print(paste("El valor esperado es: ",valor_esperado))
+print(paste("La varianza es: ",varianza))
+print(paste("La desviacion estandar es: ",desviacion_estandar))
+
+
+```
+
+```{r}
+# Teorema de Chebyshev el 75% de los datos estarian entre
+lim_inf <- valor_esperado - desviacion_estandar
+lim_sup <- valor_esperado + desviacion_estandar
+lim_inf
+lim_sup
+
+```
+```{r}
+# cuartiles con qbinom()
+qbinom(c(0.25,0.5,0.75),4,1/3)
+```
+
+
