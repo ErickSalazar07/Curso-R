@@ -1,0 +1,142 @@
+---
+title: "Binomial, Geometrica y Poisson"
+author: "Erick Salazar"
+date: "2025-03-01"
+output: html_document
+---
+
+```{r}
+dgeom(8,0.15)
+pgeom(8,0.3)
+```
+```{r}
+# Libreria
+
+library(ggplot2)
+library(tydiverse)
+
+
+# Definir parametroz
+k <- c(1:10)
+p <- 0.3
+prob_k <- dgeom(k-1,prob = p)
+
+geom_sim <- data.frame(k,prob_k)
+
+
+ggplot(geom_sim, aes(x=factor(k), y = prob_k)) +
+  geom_bar(stat = "identity", fill = "lightblue", color = "black") + 
+  labs(title="Funcion de Masa de Probabilidad - Distribucion Geometrica", 
+        x = "Primer Exito en el Ensayo K",
+       y = "P(X = k)"
+       ) + theme_minimal()
+  
+```
+```{r}
+alturas_cm <- c(100,120,130,200)
+personas <- c("J","R","P","C")
+estrato <- c("Pobre","Rico","Medio","Pobre")
+
+data <- data.frame(personas,alturas_cm,estrato)
+View(data)
+
+glimpse(data$personas)
+
+length(data)
+
+unique(data$estrato)
+
+names(mutate(data,altura_m = alturas_cm/1e2))
+
+```
+
+
+
+
+```{r}
+library(dplyr)
+
+# Definir diferentes valores de p
+p_values <- c(0.1,0.2,0.3,0.5)
+
+k_values <- 1:20
+df_prob <- expand.grid(k = k_values, p = p_values) %>% 
+  mutate(P_X = dgeom(k - 1, prob = p))
+
+ggplot(df_prob, aes(x = k, y = P_X, color = as.factor(p))) +
+  geom_line(size = 1) + 
+  geom_point(size = 2) +
+  labs(title = "Comparacion de la Funcion de Probabilidad Geometrica",
+       x = "Numero de intentos hasta el primer exito (X)",
+       y = "P(X = k)",
+       color = "Valor de p") +
+  scale_color_manual(values=c("blue","red","green","purple")) +
+  theme_minimal()
+```
+
+```{r}
+set.seed(123)
+sim_data <- rgeom(1e6,prob=p) + 1
+
+df_sim <- data.frame(X = sim_data)
+
+ggplot(df_sim, aes(x = X)) +
+  geom_histogram(bins = 20,, fill = "red", color = "black", alpha = 0.6) +
+  labs(title = "Simulacion de la Distribucion Geometrica (rgeom)",
+       x = "Numero de intentos hasta el primer exito",
+       y = "Frecuencia") +
+  theme_minimal()
+
+```
+
+3. Comportamiento Poisson
+
+```{r}
+# Parámetros
+lambda_values <- c(1, 3, 5, 10)  # diferentes valores de lambda
+x <- 0:20  # posibles valores de x (número de eventos)
+
+# Graficar las distribuciones de Poisson para diferentes valores de lambda
+plot(x, dpois(x, lambda = lambda_values[1]), type = "h", lwd = 2, col = "blue", 
+     xlab = "Número de eventos (x)", ylab = "Probabilidad", 
+     main = "Distribución de Poisson para diferentes valores de lambda", 
+     ylim = c(0, 0.25))
+
+# Añadir las distribuciones para los otros valores de lambda
+for (lambda in lambda_values[-1]) {
+  lines(x, dpois(x, lambda = lambda), type = "h", lwd = 2)
+}
+
+# Añadir leyenda
+legend("topright", legend = paste("Lambda =", lambda_values), 
+       col = 1:length(lambda_values), lwd = 2)
+
+```
+```{r}
+# Parámetros
+lambda <- 3  # valor de lambda
+x <- 0:20  # posibles valores de x (número de eventos)
+
+# Calcular la PMF y CDF de Poisson
+pmf <- dpois(x, lambda)
+cdf <- ppois(x, lambda)
+
+# Crear un data frame para ggplot
+poisson_data <- data.frame(
+  x = rep(x, 2),
+  y = c(pmf, cdf),
+  type = rep(c("PMF", "CDF"), each = length(x))
+)
+
+# Graficar PMF y CDF
+ggplot(poisson_data, aes(x = x, y = y, color = type)) +
+  geom_point(size = 3) +
+  geom_line() +
+  labs(title = "Distribución de Poisson: PMF vs CDF",
+       x = "Número de eventos (x)",
+       y = "Probabilidad",
+       color = "Tipo") +
+  scale_color_manual(values = c("blue", "red")) +
+  theme_minimal()
+
+```
