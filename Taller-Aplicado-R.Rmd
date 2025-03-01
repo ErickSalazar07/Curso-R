@@ -1,0 +1,91 @@
+---
+title: "Taller Aplicado"
+author: "Erick Salazar Suarez"
+date: "2025-02-25"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+---
+
+# 1 Leemos los datos
+```{r}
+datos <- read.csv("data_colombianos_exterior.csv")
+datos
+```
+2. Incluimos librerias
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(knitr)
+```
+3. Analizamos la estructura de los datos
+```{r}
+glimpse(datos)
+unique(datos$Área.Conocimiento)
+summary(datos$Grupo.edad)
+```
+
+```{r}
+# Filtrar valores negativos
+df_clean <- datos %>%
+  filter(Edad..años. >= 0, Estatura..CM. >= 0)
+
+# Cálculo de la media
+edad_media <- mean(df_clean$Edad..años., na.rm = TRUE)
+estatura_media <- mean(df_clean$Estatura..CM., na.rm = TRUE)
+personas_media <- mean(df_clean$Cantidad.de.personas, na.rm = TRUE)
+
+# Cálculo de la moda
+moda <- function(x) {
+  uniq_x <- unique(x)
+  uniq_x[which.max(tabulate(match(x, uniq_x)))]
+}
+
+edad_moda <- moda(df_clean$Edad..años.)
+estatura_moda <- moda(df_clean$Estatura..CM.)
+personas_moda <- moda(df_clean$Cantidad.de.personas)
+
+# Mostrar resultados
+kable(data.frame(
+  Variable = c("Edad", "Estatura", "Cantidad de Personas"),
+  Media = c(edad_media, estatura_media, personas_media),
+  Moda = c(edad_moda, estatura_moda, personas_moda)
+))
+
+```
+
+
+```{r}
+ggplot(df_clean, aes(x = Edad..años.)) +
+  geom_histogram(binwidth = 5, fill = "steelblue", color = "white") +
+  geom_vline(aes(xintercept = edad_media), color = "red", linetype = "dashed", size = 1) +
+  geom_vline(aes(xintercept = edad_moda), color = "green", linetype = "dashed", size = 1) +
+  labs(title = "Distribución de Edad", x = "Edad (años)", y = "Frecuencia")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
