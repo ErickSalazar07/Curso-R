@@ -1,0 +1,76 @@
+---
+title: "Prueba-Hipotesis"
+author: "Mariana Guevara"
+date: "2025-04-12"
+output: html_document
+---
+
+
+## Ejemplos:
+
+### Prueba de hipotesis para la media: Varianza poblacional conocida.
+
+
+```{r}
+mu_O <- 500
+mu <- 495
+sigma <- 12
+n <- 36
+Z_value <- (mu - mu_O)/(sigma/sqrt(n))
+2*pnorm(abs(Z_value),lower.tail = FALSE)
+```
+Si estamos evaluando con una significancia del 0.05, se rechaza la hipotesis puesto que el p valor es menor a la significancia
+
+
+
+## Prueba para la media: varianza poblacional desconocida
+### Ejemplo 2
+
+Un nutricionista afirma que sus pacientes pierden en promedio 5kg tras un mes. Una muestra de 10 pacientes perdio en promedio 4.1kg con una desviacion estandar de 1.5kg.
+
+```{r}
+n <- 10 # poblacion
+mu_O <- 5 # media muestral
+mu <- 4.1 # media poblacional
+s <- 1.5 # desviacion estandar muestral
+t_value <- (mu - mu_O)/(s/sqrt(n)) # el valor se lleva a una distribucion t-student
+pt(t_value, df = n-1) # se halla la probabilidad acumulada usando el valor t-student
+```
+Depende del nivel de significancia para rechazar la hipotesis nula.
+
+
+## Actividad Breve
+
+Un fabricante afirma que sus bombillos duran en promedio 1.000 horas. Se toma una muestra de 40 bombillas con media de 980 horas y s = 50.
+
+```{r}
+n <- 40
+mu_O <- 980
+mu <- 1000
+s <- 50
+t_student <- (mu-mu_O)/(s/sqrt(n))
+pt(t_student,df = n-1)
+```
+
+## Prueba de Hipotesis para Proporciones
+
+si n es suficientemente grande, se usa la aproximacion normal al binomial.
+z = (p_gorrito - p_0)/sqrt(p_0(1-p_0))/n)
+
+Donde:
+p_gorrito: proporcion muestral
+p_0: proporcion bajo
+n: tamaño de la muestra
+
+
+### Ejemplo Prueba de Hipotesis para Proporciones
+
+Se quiere saber si la proporcion de estudiantes que aprueban un examen es diferente de 0.7. Se toma una muestra de n = 100 y se encuentra que 65 aprobaron. ¿Hay evidencia significativa a nivel de significancia = 0.05?
+
+```{r}
+# prueba bilateral
+p_0 <- 0.7 # h0: tasa de aprobacion igual a 0.7
+p <- 65/100 # ha: tasa de aprobacion diferente a 0.7
+z_value <- (p - p_0)/sqrt(p_0*(1-p_0)/n)
+2*pnorm(abs(z_value),lower.tail = FALSE)
+```
