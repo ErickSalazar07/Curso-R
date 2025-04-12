@@ -1,0 +1,48 @@
+---
+title: "Correlacion-Regresion"
+author: "Erick Salazar"
+date: "2025-04-12"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+```
+
+
+La correlacion entre dos variables se calcula con la funcion
+```{r}
+df <- read.csv("sample_data.csv")
+
+df %>% select(PUNT_INGLES) %>% View()
+
+cor(df$PUNT_MATEMATICAS,df$PUNT_INGLES)
+cor(df$PUNT_MATEMATICAS,df$PUNT_GLOBAL)
+```
+
+
+## Regresion Lineal
+
+- Variable dependiente y
+- Variable independiente x
+
+- Error esta dado por la diferencia entre alturas => error = y_i - y_gorrito_i
+
+### Scater plot
+```{r}
+library(ggplot2)
+
+datos_seleccionados <- df %>% select(PUNT_MATEMATICAS,PUNT_INGLES,PUNT_GLOBAL) %>% 
+  na.omit()
+
+cor1 <- cor(datos_seleccionados$PUNT_MATEMATICAS,datos_seleccionados$PUNT_INGLES)
+cor2 <- cor(datos_seleccionados$PUNT_MATEMATICAS,datos_seleccionados$PUNT_GLOBAL)
+
+ggplot(datos_seleccionados, aes(x = PUNT_MATEMATICAS, y = PUNT_INGLES)) + 
+  geom_point(alpha = 0.4, color = "darkorange") +
+  geom_smooth(method = "lm", se = FALSE, color = "black", linetype = "dashed") +
+  labs (title = "Matematicas vs Ingles", x = "Puntaje Matematicas",y = "Puntaje Ingles") #+
+  #annotate("text",x = Inf, y = -Inf)
+
+```
+
