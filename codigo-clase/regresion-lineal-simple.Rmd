@@ -1,0 +1,89 @@
+---
+title: "Regresion Lineal Simple"
+author: "Erick Salazar"
+date: "2025-04-26"
+output: html_document
+---
+
+# Cargamos librerias
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+# Cargar Datos
+```{r}
+datos_parcial <- read.csv("datos_parcial.csv")
+head(datos_parcial)
+```
+
+
+
+# Ajuste del modelo. Los principales argumentos que se podria modificar:
+
+- formula: relacion entre variables (y~x)
+- data: el dataframe donde estan las variables
+- subset: permite ajustar el model del subconjunto
+
+```{r}
+modelo_nba <- lm(pts_per_game ~ mp_per_game, data = datos_parcial)
+```
+
+## Luego de ajustar el modelo de regresion lineal obtenemos:
+
+- Coeficientes estimados (intercepto y pendiente)
+- Error estandar t-valor y p-valor de cada coeficiente
+
+
+```{r}
+summary(modelo_nba)
+```
+
+# Lo visualizamos
+
+```{r}
+ggplot(datos_parcial, aes(x = mp_per_game, y = pts_per_game)) +
+  geom_point(color = "steelblue", alpha = 0.6) +
+  geom_smooth(method = "lm", se=FALSE, color = "darkred",linewidth = 1.2) +
+  labs(
+    title = "Regresion lineal: Minutos vs. Puntos por Partido",
+    x = "Minutos por partido",
+    y = "Puntos por partido"
+  ) +
+  theme_minimal()
+```
+
+### Homocedasticidad
+```{r}
+datos_parcial$residuos <- resid(modelo_nba)
+datos_parcial$predichos <- predict(modelo_nba)
+
+ggplot(datos_parcial, aes(x = predichos, y = residuos)) +
+  geom_point(alpha = 0.6, color = "darkblue") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(
+    title = "Residuos vs. Valores predichos",
+    x = "valores predichos",
+    y = "Residuos"
+  ) +
+  theme_minimal()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
